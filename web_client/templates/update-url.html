@@ -1,0 +1,29 @@
+<!--create-article.html-->
+
+{{ template "header.html" .}}
+
+<h1>Изменение названия и исходной ссылки</h1>
+
+
+<div class="panel panel-default col-sm-12">
+  <div class="panel-body">
+    {{ if .ErrorTitle}}
+    <p class="bg-danger">
+      {{.ErrorTitle}}: {{.ErrorMessage}}
+    </p>
+    {{end}}
+    <form class="form" action="/api/update/{{.payload.Id}}" method="POST">
+      <div class="form-group">
+        <label for="title">Название</label>
+        <input type="text" class="form-control" id="title" name="name" placeholder="Title" value="{{.payload.Name}} ">
+      </div>
+      <div class="form-group">
+        <label for="content">Исходная сслыка</label>
+        <input name="real_url" class="form-control" id="content" placeholder="Article Content" value="{{.payload.Real_url}}"></input>
+      </div>
+      <button type="submit" class="btn btn-primary">Изменить</button>
+    </form>
+  </div>
+</div>  
+    
+{{ template "footer.html" .}}

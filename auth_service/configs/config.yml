@@ -1,0 +1,9 @@
+port: "8012"
+
+db:
+  username: "root"
+  host: "localhost"
+  port: "3306"
+  dbname: "urlshorter"
+  sslmode: "disable"
+  password: "mic"

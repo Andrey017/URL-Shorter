@@ -1,0 +1,28 @@
+<!--create-url.html-->
+
+{{ template "header.html" .}}
+
+<h1>Создание ссылки</h1>
+
+<div class="panel panel-default col-sm-12">
+  <div class="panel-body">
+    {{ if .ErrorTitle}}
+    <p class="bg-danger">
+      {{.ErrorTitle}}: {{.ErrorMessage}}
+    </p>
+    {{end}}
+    <form class="form" action="/api/create" method="POST">
+      <div class="form-group">
+        <label for="title">Название</label>
+        <input type="text" class="form-control" id="title" name="name" placeholder="Название">
+      </div>
+      <div class="form-group">
+        <label for="content">Исходная сслыка</label>
+        <input name="real_url" class="form-control" id="content" placeholder="Исходная сслыка"></input>
+      </div>
+      <button type="submit" class="btn btn-primary">Создать</button>
+    </form>
+  </div>
+</div>  
+    
+{{ template "footer.html" .}}

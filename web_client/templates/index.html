@@ -1,0 +1,22 @@
+<!--index.html-->
+
+{{ template "header.html" .}}
+
+  {{range .payload }}
+    <a href="/api/urls/{{.Id}}">
+      <h2>{{.Name}}</h2>
+    </a>
+    <p>{{.Real_url}}</p>
+    <p><a href="{{.Shorter_url}}">{{.Shorter_url}}</a></p>
+
+    <div class="btn-group">
+      <a href="/api/update/{{.Id}}" class="btn btn-primary active">
+          <i class="glyphicon glyphicon-pencil" aria-hidden="true"></i> Изменить
+      </a>
+      <a href="/api/delete/{{.Id}}" class="btn btn-danger">
+         <i class="glyphicon glyphicon-trash" aria-hidden="true"></i> Удалить
+      </a>
+    </div>  
+    {{end}}
+
+{{ template "footer.html" .}}

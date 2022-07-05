@@ -1,0 +1,477 @@
+
+<!-- Styles -->
+<style>
+#chartdiv {
+  width: 100%;
+  height: 500px;
+}
+</style>
+<div id="ash_auction" visibility: hidden>{{.stat}}</div>
+<div id="statBrowserId" visibility: hidden>{{.statBrowser}}</div>
+<div id="statDataOS" visibility: hidden>{{.statDataOS}}</div>
+<div id="statDataIsMobile" visibility: hidden>{{.statDataIsMobile}}</div>
+<div id="statDataIsTab" visibility: hidden>{{.statDataIsTab}}</div>
+<div id="statCountIsMobile" visibility: hidden>{{.statCountIsMobile}}</div>
+<div id="statCountIsTab" visibility: hidden>{{.statCountIsTab}}</div>
+<div id="countRegion" visibility: hidden>{{.countRegion}}</div>
+
+<!-- Resources -->
+<script src="https://cdn.amcharts.com/lib/5/index.js"></script>
+<script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
+<script src="https://cdn.amcharts.com/lib/5/percent.js"></script>
+<script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
+
+<script src="https://cdn.amcharts.com/lib/4/core.js"></script>
+<script src="https://cdn.amcharts.com/lib/4/maps.js"></script>
+<script src="https://cdn.amcharts.com/lib/4/geodata/russiaCrimeaHigh.js"></script>
+<script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
+
+<!-- Chart code -->
+<script>
+function maybeDisposeRoot(divId) {
+  am5.array.each(am5.registry.rootElements, function(root) {
+    if (root.dom.id == divId) {
+      root.dispose();
+    }
+  });
+}
+
+var chart;
+
+function maybeDisposeChart() {
+  if(typeof chart != "undefined") {
+    chart.dispose();
+  }
+}
+
+function createChart(divId){
+  maybeDisposeChart();
+  maybeDisposeRoot(divId);
+// Create root element
+// https://www.amcharts.com/docs/v5/getting-started/#Root_element
+var root = am5.Root.new("chartdiv");
+
+
+// Set themes
+// https://www.amcharts.com/docs/v5/concepts/themes/
+root.setThemes([
+  am5themes_Animated.new(root)
+]);
+
+
+// Create chart
+// https://www.amcharts.com/docs/v5/charts/xy-chart/
+var chart = root.container.children.push(am5xy.XYChart.new(root, {
+  panX: false,
+  panY: false,
+  wheelX: "panX",
+  wheelY: "zoomX"
+}));
+
+
+// Add cursor
+// https://www.amcharts.com/docs/v5/charts/xy-chart/cursor/
+var cursor = chart.set("cursor", am5xy.XYCursor.new(root, {
+  behavior: "zoomX"
+}));
+cursor.lineY.set("visible", false);
+
+var date = new Date();
+date.setHours(0, 0, 0, 0);
+    console.log(date.getTime())
+var value = 100;
+
+function generateData() {
+  value = Math.round((Math.random() * 10 - 5) + value);
+  am5.time.add(date, "day", 1);
+  return {
+    date: date.getTime(),
+    value: value
+  };
+}
+
+function generateDatas(count) {
+  var data = [];
+  for (var i = 0; i < count; ++i) {
+    data.push(generateData());
+  }
+  return data;
+}
+
+// Create axes
+// https://www.amcharts.com/docs/v5/charts/xy-chart/axes/
+var xAxis = chart.xAxes.push(am5xy.DateAxis.new(root, {
+  maxDeviation: 0,
+  baseInterval: {
+    timeUnit: "day",
+    count: 1
+  },
+  renderer: am5xy.AxisRendererX.new(root, {}),
+  tooltip: am5.Tooltip.new(root, {})
+}));
+
+var yAxis = chart.yAxes.push(am5xy.ValueAxis.new(root, {
+  maxPrecision: 0,
+  renderer: am5xy.AxisRendererY.new(root, {})
+}));
+
+
+// Add series
+// https://www.amcharts.com/docs/v5/charts/xy-chart/series/
+var series = chart.series.push(am5xy.ColumnSeries.new(root, {
+  name: "Series",
+  xAxis: xAxis,
+  yAxis: yAxis,
+  valueYField: "counttransition",
+  valueXField: "date",
+  tooltip: am5.Tooltip.new(root, {
+    labelText: "{valueY}"
+  })
+}));
+
+
+
+// Add scrollbar
+// https://www.amcharts.com/docs/v5/charts/xy-chart/scrollbars/
+chart.set("scrollbarX", am5.Scrollbar.new(root, {
+  orientation: "horizontal"
+}));
+    
+var auction_id = document.getElementById('ash_auction').innerHTML;
+//var auction = Number.parseInt(auction_id);
+
+    //var dataSTR = auction
+
+    var data = JSON.parse(auction_id)
+    
+    console.log(data)
+
+//var data = generateDatas(2);
+series.data.setAll(data);
+    
+    console.log(data)
+
+// Make stuff animate on load
+// https://www.amcharts.com/docs/v5/concepts/animations/
+series.appear(1000);
+chart.appear(1000, 100);
+
+}; // end am5.ready()
+
+function createChart2(divId){
+  maybeDisposeChart();
+    maybeDisposeRoot(divId);
+    
+    // Create root element
+    // https://www.amcharts.com/docs/v5/getting-started/#Root_element
+    var root = am5.Root.new("chartdiv");
+    
+    // Set themes
+    // https://www.amcharts.com/docs/v5/concepts/themes/
+    root.setThemes([
+      am5themes_Animated.new(root)
+    ]);
+    
+    // Create chart
+    // https://www.amcharts.com/docs/v5/charts/percent-charts/pie-chart/
+    var chart = root.container.children.push(
+      am5percent.PieChart.new(root, {
+        endAngle: 270
+      })
+    );
+    
+    // Create series
+    // https://www.amcharts.com/docs/v5/charts/percent-charts/pie-chart/#Series
+    var series = chart.series.push(
+      am5percent.PieSeries.new(root, {
+        valueField: "count",
+        categoryField: "browser",
+        endAngle: 270
+      })
+    );
+    
+    series.states.create("hidden", {
+      endAngle: -90
+    });
+
+    var statBrowserId = document.getElementById('statBrowserId').innerHTML;
+
+    var data = JSON.parse(statBrowserId)
+    
+    console.log(data)
+    
+    // Set data
+    // https://www.amcharts.com/docs/v5/charts/percent-charts/pie-chart/#Setting_data
+    series.data.setAll(data);
+    
+    series.appear(1000, 100);
+    
+    }; // end am5.ready()
+
+
+function createChart3(divId){
+  maybeDisposeChart();
+  maybeDisposeRoot(divId);
+
+  // Create root element
+// https://www.amcharts.com/docs/v5/getting-started/#Root_element
+var root = am5.Root.new("chartdiv");
+
+// Set themes
+// https://www.amcharts.com/docs/v5/concepts/themes/
+root.setThemes([am5themes_Animated.new(root)]);
+
+var container = root.container.children.push(
+  am5.Container.new(root, {
+    width: am5.p100,
+    height: am5.p100,
+    layout: root.horizontalLayout
+  })
+);
+
+// Create main chart
+// https://www.amcharts.com/docs/v5/charts/percent-charts/pie-chart/
+var chart = container.children.push(
+  am5percent.PieChart.new(root, {
+    tooltip: am5.Tooltip.new(root, {})
+  })
+);
+
+// Create series
+// https://www.amcharts.com/docs/v5/charts/percent-charts/pie-chart/#Series
+var series = chart.series.push(
+  am5percent.PieSeries.new(root, {
+    valueField: "value",
+    categoryField: "category",
+    alignLabels: false
+  })
+);
+
+series.labels.template.setAll({
+  textType: "circular",
+  radius: 4
+});
+series.ticks.template.set("visible", false);
+series.slices.template.set("toggleKey", "none");
+
+// add events
+series.slices.template.events.on("click", function(e) {
+  selectSlice(e.target);
+});
+
+// Create sub chart
+// https://www.amcharts.com/docs/v5/charts/percent-charts/pie-chart/
+var subChart = container.children.push(
+  am5percent.PieChart.new(root, {
+    radius: am5.percent(50),
+    tooltip: am5.Tooltip.new(root, {})
+  })
+);
+
+// Create sub series
+// https://www.amcharts.com/docs/v5/charts/percent-charts/pie-chart/#Series
+var subSeries = subChart.series.push(
+  am5percent.PieSeries.new(root, {
+    valueField: "count",
+    categoryField: "os"
+  })
+);
+
+    var statDataOS = document.getElementById('statDataOS').innerHTML;
+
+    var dataOs = JSON.parse(statDataOS)
+    
+    console.log(dataOs)
+    
+    //dataOs = `[{"os":"iOS","count":0},{"os":"Windows","count":0}]`
+
+subSeries.data.setAll(dataOs);
+subSeries.slices.template.set("toggleKey", "none");
+
+var selectedSlice;
+
+series.on("startAngle", function() {
+  updateLines();
+});
+
+container.events.on("boundschanged", function() {
+  root.events.on("frameended", function(){
+    updateLines();
+   })
+})
+
+function updateLines() {
+  if (selectedSlice) {
+    var startAngle = selectedSlice.get("startAngle");
+    var arc = selectedSlice.get("arc");
+    var radius = selectedSlice.get("radius");
+
+    var x00 = radius * am5.math.cos(startAngle);
+    var y00 = radius * am5.math.sin(startAngle);
+
+    var x10 = radius * am5.math.cos(startAngle + arc);
+    var y10 = radius * am5.math.sin(startAngle + arc);
+
+    var subRadius = subSeries.slices.getIndex(0).get("radius");
+    var x01 = 0;
+    var y01 = -subRadius;
+
+    var x11 = 0;
+    var y11 = subRadius;
+
+    var point00 = series.toGlobal({ x: x00, y: y00 });
+    var point10 = series.toGlobal({ x: x10, y: y10 });
+
+    var point01 = subSeries.toGlobal({ x: x01, y: y01 });
+    var point11 = subSeries.toGlobal({ x: x11, y: y11 });
+
+    line0.set("points", [point00, point01]);
+    line1.set("points", [point10, point11]);
+  }
+}
+
+// lines
+var line0 = container.children.push(
+  am5.Line.new(root, {
+    position: "absolute",
+    stroke: root.interfaceColors.get("text"),
+    strokeDasharray: [2, 2]
+  })
+);
+var line1 = container.children.push(
+  am5.Line.new(root, {
+    position: "absolute",
+    stroke: root.interfaceColors.get("text"),
+    strokeDasharray: [2, 2]
+  })
+);
+
+var statDataIsMobile = document.getElementById('statDataIsMobile').innerHTML;
+
+var statDataIsTab = document.getElementById('statDataIsTab').innerHTML;
+
+var statCountIsMobile = document.getElementById('statCountIsMobile').innerHTML;
+var dataIsMobile = JSON.parse(statCountIsMobile)
+    
+var statCountIsTab = document.getElementById('statCountIsTab').innerHTML;
+var dataIsTab = JSON.parse(statCountIsTab)
+
+// Set data
+// https://www.amcharts.com/docs/v5/charts/percent-charts/pie-chart/#Setting_data
+series.data.setAll([
+  {
+    category: "ПК",
+    value: statDataIsTab,
+    subData: dataIsTab
+  },
+  {
+    category: "Мобильные устройства",
+    value: statDataIsMobile,
+    subData: dataIsMobile
+  },
+]);
+
+function selectSlice(slice) {
+  selectedSlice = slice;
+  var dataItem = slice.dataItem;
+  var dataContext = dataItem.dataContext;
+
+  if (dataContext) {
+    var i = 0;
+    subSeries.data.each(function(dataObject) {
+      var dataObj = dataContext.subData[i];
+      if(dataObj){
+          subSeries.data.setIndex(i, dataObj);
+          if(!subSeries.dataItems[i].get("visible")){
+              subSeries.dataItems[i].show();
+          }
+      }
+      else{
+          subSeries.dataItems[i].hide();
+      }
+      
+      i++;
+    });
+  }
+
+  var middleAngle = slice.get("startAngle") + slice.get("arc") / 2;
+  var firstAngle = series.dataItems[0].get("slice").get("startAngle");
+
+  series.animate({
+    key: "startAngle",
+    to: firstAngle - middleAngle,
+    duration: 1000,
+    easing: am5.ease.out(am5.ease.cubic)
+  });
+  series.animate({
+    key: "endAngle",
+    to: firstAngle - middleAngle + 360,
+    duration: 1000,
+    easing: am5.ease.out(am5.ease.cubic)
+  });
+}
+
+container.appear(1000, 10);
+
+series.events.on("datavalidated", function() {
+  selectSlice(series.slices.getIndex(0));
+});
+}
+
+function createChart4(divId){
+  maybeDisposeChart();
+  maybeDisposeRoot(divId);
+  am4core.useTheme(am4themes_animated);
+// Themes end
+
+ // Create map instance
+chart = am4core.create("chartdiv", am4maps.MapChart);
+
+// Set map definition
+chart.geodata = am4geodata_russiaCrimeaHigh;
+
+// Set projection
+chart.projection = new am4maps.projections.Mercator();
+
+// Create map polygon series
+var polygonSeries = chart.series.push(new am4maps.MapPolygonSeries());
+
+//Set min/max fill color for each area
+polygonSeries.heatRules.push({
+  property: "fill",
+  target: polygonSeries.mapPolygons.template,
+  min: chart.colors.getIndex(1).brighten(1),
+  max: chart.colors.getIndex(1).brighten(-0.3)
+});
+
+// Make map load polygon data (state shapes and names) from GeoJSON
+polygonSeries.useGeodata = true;
+
+chart.deltaLongitude = -10;
+
+var countRegion = document.getElementById('countRegion').innerHTML;
+var dataCountRegion = JSON.parse(countRegion)
+
+// Set heatmap values for each state
+polygonSeries.data = dataCountRegion;
+
+// Configure series tooltip
+var polygonTemplate = polygonSeries.mapPolygons.template;
+polygonTemplate.tooltipHTML = '<div class="c-tooltip"> <div class="c-label">{name}</div> <div class="c-tooltip__bottom"> <div class="c-span unit opa">Количество переходов:</div> <div class="c-span large">{value}</div> </div> </div>';
+polygonTemplate.nonScalingStroke = true;
+polygonTemplate.strokeWidth = 0.5;
+polygonSeries.calculateVisualCenter = true;
+polygonTemplate.tooltipPosition = "fixed";
+polygonSeries.tooltip.label.interactionsEnabled = true;
+polygonSeries.tooltip.keepTargetHover = true;
+polygonTemplate.fill = am4core.color("#808080");
+
+// Create hover state and set alternative fill color
+var hs = polygonTemplate.states.create("hover");
+hs.properties.fill = am4core.color("#3c5bdc");
+}
+
+    createChart('chartdiv')
+</script>
+
+<!-- HTML -->

@@ -1,0 +1,25 @@
+<!--menu.html-->
+
+<nav class="navbar navbar-default">
+    <div class="container">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="/">
+          Главная
+        </a>
+      </div>
+      <ul class="nav navbar-nav">
+          {{ if .logged }}
+          <li><a href="/api/create">Создать ссылку</a></li>
+          {{end}} 
+          {{ if not .logged }}
+          <li><a href="/u/reg">Регистрация</a></li>
+          {{end}} 
+          {{ if not .logged }}
+          <li><a href="/u/login">Авторизация</a></li>
+          {{end}} 
+          {{ if .logged }}
+          <li><a href="/u/logout">Выход</a></li>
+          {{end}} 
+      </ul>
+    </div>
+  </nav>

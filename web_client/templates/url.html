@@ -1,0 +1,31 @@
+<!--url.html-->
+
+{{ template "header.html" .}}
+
+<h1>{{.payload.Name}}</h1>
+
+<p>{{.payload.Real_url}}</p>
+
+<p><a href="{{.payload.Shorter_url}}">{{.payload.Shorter_url}}</a></p>
+
+<div class="btn-group">
+    <a href="/api/update/{{.payload.Id}}" class="btn btn-primary active">
+        <i class="glyphicon glyphicon-pencil" aria-hidden="true"></i> Изменить
+    </a>
+    <a href="/api/delete/{{.payload.Id}}" class="btn btn-danger">
+       <i class="glyphicon glyphicon-trash" aria-hidden="true"></i> Удалить
+    </a>
+</div> 
+
+<ul class="nav nav-pills nav-justified" style="margin-top: 10px;">
+    <li class="active"><a data-toggle="pill" href="#home" onclick="createChart('chartdiv');">Количество переходов: {{.totalCount}}</a></li>
+    <li><a data-toggle="pill" href="#menu1" onclick="createChart2('chartdiv');">Статистика по браузерам</a></li>
+    <li><a data-toggle="pill" href="#menu2" onclick="createChart3('chartdiv');">Статистика по ОС</a></li>
+    <li><a data-toggle="pill" href="#menu3" onclick="createChart4('chartdiv');">Статистика по регионам</a></li>
+</ul>
+
+<div id="chartdiv"></div>
+
+{{ template "stat.html" .}}
+
+{{ template "footer.html" .}}

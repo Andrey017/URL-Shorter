@@ -1,0 +1,2 @@
+ip_auth_service: http://192.168.17.199:8012
+ip_url_service: http://192.168.17.199:8013

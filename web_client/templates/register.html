@@ -1,0 +1,32 @@
+<!--register.html-->
+
+{{ template "header.html" .}}
+
+<h1 style="text-align: center;">Регистрация</h1>
+
+<div class="panel panel-default col-sm-6 col-sm-offset-3">
+  <div class="panel-body">
+    {{ if .ErrorTitle}}
+    <p class="bg-danger">
+      {{.ErrorTitle}}: {{.ErrorMessage}}
+    </p>
+    {{end}}
+    <form class="form" action="/u/reg" method="POST">
+      <div class="form-group">
+        <label for="name">Имя</label>
+        <input type="text" class="form-control" id="name" name="name" placeholder="Имя">
+      </div>
+      <div class="form-group">
+        <label for="username">E-mail</label>
+        <input type="text" name="username" class="form-control" id="username" placeholder="E-mail">
+      </div>
+      <div class="form-group">
+        <label for="password">Пароль</label>
+        <input type="password" name="password" class="form-control" id="password" placeholder="Пароль">
+      </div>
+      <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+    </form>
+  </div>
+</div>  
+    
+{{ template "footer.html" .}}
